@@ -64,10 +64,11 @@ def load_data_to_snowflake(**kwargs):
     if not conf:
         raise AirflowException("No configuration provided by trigger")
 
-    file_path = conf.get('file_path')
-    if not file_path:
-        raise AirflowException("No file path provided in configuration")
+    run_date = conf.get('run_date')
+    if not run_date:
+        raise AirflowException("No run_date provided in configuration")
 
+    file_path = f"daily/weather_{run_date}.json"
     blob_hook = WasbHook(wasb_conn_id='azure_blob_default')
     logging.info(f"Downloading {file_path} from Azure Blob...")
 
@@ -102,7 +103,6 @@ def load_data_to_snowflake(**kwargs):
         snowflake_op.execute(kwargs)
 
 
-# DAG
 default_args = {
     "owner": "eddie",
     "start_date": datetime(2025, 5, 10),

@@ -12,8 +12,6 @@ provider "snowflake" {
   user = var.snowflake_username
   password = var.snowflake_password
   role = var.snowflake_role
-  region = var.snowflake_region
-  insecure_mode = true
 }
 
 variable "env" {
@@ -89,4 +87,12 @@ resource "snowflake_table_grant" "weather_role_raw_future_tables" {
   privilege     = "ALL PRIVILEGES"
   on_future     = true
   roles         = [snowflake_role.weather_role.name]
+}
+
+# 11. Create weather_data table using module
+module "weather_table" {
+  source = "./modules/weather_table"
+
+  database_name = snowflake_database.weather_db.name
+  schema_name   = snowflake_schema.raw.name
 }

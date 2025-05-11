@@ -112,7 +112,6 @@ with DAG(
         wait_for_completion=True,
         poke_interval=60,
         conf={
-            "file_path": "{{ task_instance.xcom_pull(task_ids='fetch_and_upload')['file_path'] }}",
             "run_date": "{{ ds }}"
         }
     )
